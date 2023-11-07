@@ -36,6 +36,25 @@ Temos muitas opções....
 
 # Desenvolvendo nosso servidor
 
+```bash
+poetry add install fastapi uvicorn
+```
+
+# Nossos verbos
+
+O protocolo HTTP é a base usada por trás das APIs REST e as "requisita" utilizando diversos "tipos". Os mais comuns são:
+
+- POST: Criar um recurso
+- DELETE: Remover um recurso
+- 
+- GET: Obter um recurso
+- POST: Criar um recurso
+- PUT: Update um recurso
+- DELETE: Remover um recurso
+
+# Contratos 
+
+
 Vamos criar nosso contrato com Pydantic
 
 ```python
@@ -46,6 +65,8 @@ class Product(BaseModel):
     price: float
     description: str
 ```
+
+# Filtros
 
 # Desenvolvendo nosso cliente
 
