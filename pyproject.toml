@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "api-do-jupyter-notebook-pro-deploy"
+version = "0.1.0"
+description = ""
+authors = ["Luciano Filho <lvgalvaofilho@gmail.com>"]
+readme = "README.md"
+packages = [{include = "api_do_jupyter_notebook_pro_deploy"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.1"
+pydantic = "^2.4.2"
+
+
+[tool.poetry.group.dev.dependencies]
+httpie = "^3.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
