@@ -1,18 +1,18 @@
-# A internet
-
-Nos últimos anos, a Web se transformou de uma rede de servidores web que serviam principalmente páginas estáticas para navegadores de internet...
-
-![Internet](https://thefloppydisk.files.wordpress.com/2013/05/web10.png?w=1248)
-
-...em uma completa arquitetura cliente-servidor, onde aplicativos web utilizam princípios para se comunicar com aplicações do lado do servidor, cada vez mais por meio de APIs RESTful simples, mas poderosas.
-
-![Imagem](https://thefloppydisk.files.wordpress.com/2013/05/web20.png?w=1245)
-
 # O que é uma API?
 
 Uma API (Application Programming Interface) é um conjunto de rotinas e padrões (contratos) estabelecidos por uma aplicação, para que outras aplicações possam utilizar as funcionalidades dessa aplicação.
 
 ![Imagem](assets/server-server.png)
+
+# Por que usar uma API?
+
+Nos últimos anos, a Internet se transformou de uma rede de servidores web que serviam principalmente páginas estáticas para navegadores de internet...
+
+![Internet](https://thefloppydisk.files.wordpress.com/2013/05/web10.png?w=1248)
+
+...em uma arquitetura cliente-servidor, onde aplicativos web e mobile se comunicam com diferentes aplicações, cada vez mais por meio de APIs RESTful simples, mas poderosas.
+
+![Imagem](https://thefloppydisk.files.wordpress.com/2013/05/web20.png?w=1245)
 
 # As regras do jogo
 
@@ -34,55 +34,32 @@ Temos muitas opções....
 
 ...mas vamos de FastAPI!
 
-# Desenvolvendo nosso servidor
+# Como se comunicar com ela?
 
-```bash
-poetry add install fastapi uvicorn
+- Nosso protocolo (ex: http)
+
+- Nosso servidor tem um endereço (ex: rickandmortyapi.com)
+
+- Nosso servidor tem uma porta (ex: 8080 para http e 443 para https)
+
+- E precisamos acessar um recurso ou como constumamos chamar, endpoint ou rota (ex: /api/character)
+
+``` 
+https://rickandmortyapi.com:443/api/character
 ```
 
 # Nossos verbos
 
 O protocolo HTTP é a base usada por trás das APIs REST e as "requisita" utilizando diversos "tipos". Os mais comuns são:
 
-- POST: Criar um recurso
+O que é o CRUD? 
+
+Create, Read, Update e Delete
+
+- POST: (Create) Criar um recurso
+- GET: (Read) Obter um recurso
+- PUT: (Update) Atualizar um recurso
 - DELETE: Remover um recurso
-- 
-- GET: Obter um recurso
-- POST: Criar um recurso
-- PUT: Update um recurso
-- DELETE: Remover um recurso
-
-# Contratos 
-
-
-Vamos criar nosso contrato com Pydantic
-
-```python
-from pydantic import BaseModel
-
-class Product(BaseModel):
-    name: str
-    price: float
-    description: str
-```
-
-# Filtros
-
-# Desenvolvendo nosso cliente
-
-Como converar com ele?
-
-- Nosso protocolo (ex: http)
-
-- Nosso servidor tem um endereço (ex: localhost)
-
-- Nosso servidor tem uma porta (ex: 8000)
-
-- E precisamos acessar um recurso ou como constumamos chamar, endpoint ou rota (ex: /products)
-
-``` 
-http://localhost:8000/products
-```
 
 # Qual a diferença entre REST e RESTful?
 
