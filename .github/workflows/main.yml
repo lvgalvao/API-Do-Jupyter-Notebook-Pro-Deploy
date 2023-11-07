@@ -30,6 +30,7 @@ jobs:
       #----------------------------------------------
       - name: Install project
         run: |
+          poetry shell
           source .venv/bin/activate
           poetry install --with dev
       #----------------------------------------------
