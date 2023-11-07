@@ -6,30 +6,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      #----------------------------------------------
-      #       check-out repo and set-up python
-      #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v3
+
       - name: Set up python
         id: setup-python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      #----------------------------------------------
-      #  -----  install & configure poetry  -----
-      #----------------------------------------------
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-      #----------------------------------------------
-      # install dependencies
-      #----------------------------------------------
-      - name: Install project
-        run: poetry install --with dev
-      
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: List directory contents
+        run: ls -la
+
       - name: Run tests
-        run: poetry run pytest -v tests.py
+        run: pytest -v tests.py
