@@ -64,3 +64,143 @@ Create, Read, Update e Delete
 # Qual a diferença entre REST e RESTful?
 
 REST é um estilo de arquitetura para sistemas distribuídos, enquanto RESTful é a implementação desse estilo.
+
+# Vamos para a prática?
+
+# Instalando o FastAPI
+
+```
+pip install fastapi
+```
+
+# Instalando o Uvicorn
+
+```
+pip install uvicorn
+```
+
+# Criando nosso primeiro endpoint
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+```
+
+# Executando o servidor
+
+```
+uvicorn main:app --reload
+```
+
+# Criando nosso primeiro teste
+
+```bash
+touch tests.py
+```
+
+```bash
+pip install pytest
+```
+
+```python
+from fastapi.testclient import TestClient
+
+from main import app
+
+client = TestClient(app)
+
+
+def test_main_status_code():
+    response = client.get("/")
+    assert response.status_code == 200
+
+
+def test_main_response():
+    response = client.get("/")
+    assert response.json() == {"Hello": "World"}
+```
+
+# Rodando os testes
+
+```bash
+pytest -v tests.py
+```
+
+# Colocando nosso CI para funcionar
+
+```bash
+touch .github/workflows/main.yml
+```
+
+```yaml
+name: CI
+
+on: pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: List directory contents
+        run: ls -la
+
+      - name: Run tests
+        run: pytest -v tests.py
+```
+
+# Criando nossa segunda view
+
+```python
+
+produtos: List[Dict[str, Any]] = [
+    {
+        "id": 1,
+        "titulo": "Cadeira Gamer",
+        "descricao": "Cadeira confortável para fazer live",
+        "preço": 1200.00,
+    },
+    {
+        "id": 2,
+        "a titulo": "Workshop",
+        "descricao": "Workshop de deploy",
+        "preço": 100.00,
+    },
+    {
+        "id": 3,
+        "a titulo": "Iphone",
+        "descricao": "Iphone 14",
+        "preço": 2000.00,
+    },
+]
+
+@app.get("/produtos")
+def listar_produtos():
+    """
+    View que que retorna o dicionário de produtos
+    """
+    return produtos
+```
+
+
+
+
+
+
+
