@@ -34,6 +34,8 @@ Temos muitas opções....
 
 ...mas vamos de FastAPI!
 
+Para saber mais sobre alternativas, inspiração e comparações [veja aqui](https://fastapi.tiangolo.com/)
+
 # Como se comunicar com ela?
 
 - Nosso protocolo (ex: http)
@@ -67,19 +69,38 @@ REST é um estilo de arquitetura para sistemas distribuídos, enquanto RESTful �
 
 # Vamos para a prática?
 
+Vamos usar o VScode e o terminal para criar nossa primeira API.
+
+# Criando nosso ambiente virtual
+Ambientes virtuais são uma ferramenta para manter as dependências necessárias para diferentes projetos em locais separados, evitando problemas de compatibilidade.
+
+```bash
+python -m venv .venv
+```
+
+# Ativando nosso ambiente virtual
+
+```bash
+source .venv/bin/activate
+```
+
 # Instalando o FastAPI
+O FastAPI é um framework para criação de APIs RESTful com Python.
+
 
 ```
 pip install fastapi
 ```
 
 # Instalando o Uvicorn
+O Uvicorn é um servidor ASGI de alto desempenho, construído com base no Starlette e o servidor padrão recomendado para o FastAPI. ASGI é uma especificação para servidores Python que permite que eles sejam compatíveis com frameworks assíncronos, como o FastAPI. Assíncrono significa que o servidor pode lidar com mais de uma solicitação ao mesmo tempo.
 
 ```
 pip install uvicorn
 ```
 
 # Criando nosso primeiro endpoint
+Endpoints são os pontos de acesso de uma API. Eles são definidos por uma URL, um método e um conjunto de parâmetros.
 
 ```python
 from fastapi import FastAPI
@@ -92,12 +113,14 @@ def read_root():
 ```
 
 # Executando o servidor
+Para executar o servidor, precisamos usar o Uvicorn e passar o nome do arquivo e o nome da variável que contém a instância do FastAPI.
 
 ```
 uvicorn main:app --reload
 ```
 
 # Criando nosso primeiro teste
+Testes automatizados são uma parte importante do desenvolvimento de software. Eles são usados para garantir que o código que escrevemos faça o que esperamos que ele faça.
 
 ```bash
 touch tests.py
@@ -132,6 +155,7 @@ pytest -v tests.py
 ```
 
 # Colocando nosso CI para funcionar
+CI (Continuous Integration) é uma prática de desenvolvimento de software onde os desenvolvedores integram seu código em um repositório compartilhado com frequência, onde testes e builds são executados automaticamente.
 
 ```bash
 touch .github/workflows/main.yml
@@ -166,6 +190,7 @@ jobs:
 ```
 
 # Criando nossa segunda view
+Modificando o arquivo main.py
 
 ```python
 
@@ -174,7 +199,7 @@ produtos: List[Dict[str, Any]] = [
         "id": 1,
         "titulo": "Cadeira Gamer",
         "descricao": "Cadeira confortável para fazer live",
-        "preço": 1200.00,
+        "preço": 5.0,
     },
     {
         "id": 2,
@@ -186,7 +211,7 @@ produtos: List[Dict[str, Any]] = [
         "id": 3,
         "a titulo": "Iphone",
         "descricao": "Iphone 14",
-        "preço": 2000.00,
+        "preço": None,
     },
 ]
 
@@ -197,6 +222,37 @@ def listar_produtos():
     """
     return produtos
 ```
+
+# Adicionando o tipo de retorno Pydantic
+
+```
+pip install pydantic
+```
+
+```python
+from Pydantic import BaseModel
+
+class Produto(BaseModel):
+    id: int
+    titulo: str
+    descricao: Optional[str]
+    preco: float
+
+@app.get("/produtos", response_model=List[ModeloProduto])
+
+```
+
+# Pydantic já trabalhando
+
+```bash
+
+  {'type': 'missing', 'loc': ('response', 0, 'preco'), 'msg': 'Field required', 'input': {'id': 1, 'titulo': 'Cadeira Gamer', 'descricao': 'Cadeira confortável para fazer live', 'preço': 5.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 1, 'titulo'), 'msg': 'Field required', 'input': {'id': 2, 'a titulo': 'Workshop', 'descricao': 'Workshop de deploy', 'preço': 100.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 1, 'preco'), 'msg': 'Field required', 'input': {'id': 2, 'a titulo': 'Workshop', 'descricao': 'Workshop de deploy', 'preço': 100.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 2, 'titulo'), 'msg': 'Field required', 'input': {'id': 3, 'a titulo': 'Iphone', 'descricao': 'Iphone 14', 'preço': 2000.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 2, 'preco'), 'msg': 'Field required', 'input': {'id': 3, 'a titulo': 'Iphone', 'descricao': 'Iphone 14', 'preço': 2000.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+
+  ```
 
 
 
