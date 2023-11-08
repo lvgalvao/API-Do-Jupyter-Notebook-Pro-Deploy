@@ -27,18 +27,18 @@ def test_products_list():
             "id": 1,
             "titulo": "Cadeira Gamer",
             "descricao": "Cadeira confortável para fazer live",
-            "preço": 1200.00,
+            "preco": 5.00,
         },
         {
             "id": 2,
-            "a titulo": "Workshop",
+            "titulo": "Workshop",
             "descricao": "Workshop de deploy",
-            "preço": 100.00,
+            "preco": 100.00,
         },
         {
             "id": 3,
-            "a titulo": "Iphone",
+            "titulo": "Iphone",
             "descricao": "Iphone 14",
-            "preço": 2000.00,
+            "preco": None,
         },
     ]

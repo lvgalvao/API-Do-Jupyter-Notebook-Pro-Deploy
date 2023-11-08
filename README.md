@@ -97,6 +97,20 @@ def read_root():
 uvicorn main:app --reload
 ```
 
+# Acessando o endpoint
+
+```
+http://localhost:8000/
+```
+
+![Docs](assets/docs-fastapi.png)
+
+Uma das melhores coisas do FastAPI é que ele implementa o OpenAPI, que é um padrão para documentação de APIs REST, e com isso, ele gera uma documentação automática para a nossa API.
+
+```
+http://localhost:8000/docs
+```
+
 # Criando nosso primeiro teste
 
 ```bash
@@ -175,7 +189,7 @@ produtos: List[Dict[str, Any]] = [
         "id": 1,
         "titulo": "Cadeira Gamer",
         "descricao": "Cadeira confortável para fazer live",
-        "preço": 1200.00,
+        "preço": 5.0,
     },
     {
         "id": 2,
@@ -187,7 +201,7 @@ produtos: List[Dict[str, Any]] = [
         "id": 3,
         "a titulo": "Iphone",
         "descricao": "Iphone 14",
-        "preço": 2000.00,
+        "preço": None,
     },
 ]
 
@@ -199,7 +213,36 @@ def listar_produtos():
     return produtos
 ```
 
+# Adicionando o tipo de retorno Pydantic
 
+```
+pip install pydantic
+```
+
+```python
+from Pydantic import BaseModel
+
+class Produto(BaseModel):
+    id: int
+    titulo: str
+    descricao: Optional[str]
+    preco: float
+
+@app.get("/produtos", response_model=List[ModeloProduto])
+
+```
+
+# Pydantic já trabalhando
+
+```bash
+
+  {'type': 'missing', 'loc': ('response', 0, 'preco'), 'msg': 'Field required', 'input': {'id': 1, 'titulo': 'Cadeira Gamer', 'descricao': 'Cadeira confortável para fazer live', 'preço': 5.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 1, 'titulo'), 'msg': 'Field required', 'input': {'id': 2, 'a titulo': 'Workshop', 'descricao': 'Workshop de deploy', 'preço': 100.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 1, 'preco'), 'msg': 'Field required', 'input': {'id': 2, 'a titulo': 'Workshop', 'descricao': 'Workshop de deploy', 'preço': 100.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 2, 'titulo'), 'msg': 'Field required', 'input': {'id': 3, 'a titulo': 'Iphone', 'descricao': 'Iphone 14', 'preço': 2000.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+  {'type': 'missing', 'loc': ('response', 2, 'preco'), 'msg': 'Field required', 'input': {'id': 3, 'a titulo': 'Iphone', 'descricao': 'Iphone 14', 'preço': 2000.0}, 'url': 'https://errors.pydantic.dev/2.4/v/missing'}
+
+  ```
 
 
 
