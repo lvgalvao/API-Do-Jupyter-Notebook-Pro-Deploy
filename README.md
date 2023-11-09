@@ -310,6 +310,10 @@ def test_criar_modelo_item_com_preco_zero():
         item = ModeloItem(titulo="Item Teste", preco=0)
 ```
 
+# Criando nosso primeiro POST
+
+```python
+
 
 
 
