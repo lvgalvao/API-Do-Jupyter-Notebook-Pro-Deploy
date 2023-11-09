@@ -1,4 +1,7 @@
 fastapi
+httpx
 prospector
 pydantic
+pytest
+taskipy
 uvicorn

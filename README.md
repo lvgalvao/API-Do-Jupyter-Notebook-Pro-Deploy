@@ -310,12 +310,20 @@ def test_criar_modelo_item_com_preco_zero():
         item = ModeloItem(titulo="Item Teste", preco=0)
 ```
 
-# Criando nosso primeiro POST
+# Colocando nossa aplicação no Ar
 
-```python
+Vamos usar o site
 
+https://dashboard.render.com/login
 
+![Render](assets/render1.png)
 
+![Render2](assets/render2.png)
 
+![Render3](assets/render3.png)
+
+Configuração do Uvicorn
+
+uvicorn main:app --host 0.0.0.0 --port 10000
 
 
