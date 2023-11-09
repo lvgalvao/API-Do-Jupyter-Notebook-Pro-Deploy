@@ -13,3 +13,8 @@ def test_main_status_code():
 def test_main_response():
     response = client.get("/")
     assert response.json() == {"Hello": "World"}
+
+
+def test_listar_response_json():
+    response = client.get("/produtos")
+    assert len(response.json()) == 3
