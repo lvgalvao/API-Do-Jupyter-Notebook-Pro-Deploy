@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from typing import Optional, List
 from pydantic import BaseModel, PositiveFloat
 from data import Produtos
+from modelos import ModeloItem
 
 app = FastAPI()
 produtos = Produtos()

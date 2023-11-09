@@ -254,6 +254,61 @@ class Produto(BaseModel):
 
   ```
 
+Refatorando, criar uma branch chamada data
+
+Vamos criar um arquivo data.py
+
+Jogar a nossa lista para lá
+
+Refatorando, criar uma branch chamada modelos.py
+
+```python
+
+from typing import Optional
+from pydantic import BaseModel, PositiveFloat
+
+
+class ModeloItem(BaseModel):
+    """
+    Modelo para um item de produto
+    """
+
+    titulo: str
+    descricao: Optional[str] = None
+    preco: PositiveFloat
+
+```
+
+Vamos criar também 4 novos testes
+
+```python
+# Teste para criar um item válido
+def test_criar_modelo_item_valido():
+    item = ModeloItem(
+        titulo="Item Teste", descricao="Uma descrição qualquer", preco=10.99
+    )
+    assert item.titulo == "Item Teste"
+    assert item.descricao == "Uma descrição qualquer"
+    assert item.preco == 10.99
+
+
+# Teste para falhar na criação de um item sem título
+def test_criar_modelo_item_sem_titulo():
+    with pytest.raises(ValidationError):
+        item = ModeloItem(preco=10.99)
+
+
+# Teste para falhar na criação de um item com preço negativo
+def test_criar_modelo_item_com_preco_negativo():
+    with pytest.raises(ValidationError):
+        item = ModeloItem(titulo="Item Teste", preco=-10.99)
+
+
+# Teste para falhar na criação de um item com preço igual a zero
+def test_criar_modelo_item_com_preco_zero():
+    with pytest.raises(ValidationError):
+        item = ModeloItem(titulo="Item Teste", preco=0)
+```
 
 
 
