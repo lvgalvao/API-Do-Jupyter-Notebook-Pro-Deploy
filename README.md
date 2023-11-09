@@ -326,6 +326,56 @@ Configuração do Uvicorn
 
 uvicorn main:app --host 0.0.0.0 --port 10000
 
-# Aplicação no Ar
+# Vamos criar nossa rota post
 
+na main.py adicionar
+
+```python
+@app.post("/produtos", response_model=ModeloItem)
+def inserir_produto(item_a_inserir: ModeloItem):
+    """
+    View que adiciona um novo produto
+    """
+    return produtos.inserir(item_a_inserir.model_dump())
+```
+
+no data.py adicionar
+```python
+    def inserir(self, item: Dict[str, any]) -> Dict[str, any]:
+        self.id_atual += 1
+        item["id"] = self.id_atual
+        self.produtos = self.produtos.append(item)
+        return item
+```
+
+no tests.py adicionar
+```
+def test_inserir_produto():
+    # Dados do produto que vamos inserir
+    produto_data = {
+        "titulo": "Produto Teste",
+        "descricao": "Descrição do Produto Teste",
+        "preco": 19.99,
+    }
+
+    # Simula uma requisição POST para a rota /produtos
+    response = client.post("/produtos", json=produto_data)
+
+    # Verifica se o status code da resposta é 200 (OK)
+    assert response.status_code == 200
+
+    # Verifica se a resposta segue o modelo ModeloItem
+    response_data = response.json()
+    assert response_data["titulo"] == produto_data["titulo"]
+    assert response_data["descricao"] == produto_data["descricao"]
+    assert response_data["preco"] == produto_data["preco"]
+```
+
+# Verificar se nossa CI/CD está funcionando
+
+push post
+
+PR post to main
+
+Avaliar!
 

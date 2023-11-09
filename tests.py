@@ -50,3 +50,24 @@ def test_criar_modelo_item_com_preco_negativo():
 def test_criar_modelo_item_com_preco_zero():
     with pytest.raises(ValidationError):
         item = ModeloItem(titulo="Item Teste", preco=0)
+
+
+def test_inserir_produto():
+    # Dados do produto que vamos inserir
+    produto_data = {
+        "titulo": "Produto Teste",
+        "descricao": "Descrição do Produto Teste",
+        "preco": 19.99,
+    }
+
+    # Simula uma requisição POST para a rota /produtos
+    response = client.post("/produtos", json=produto_data)
+
+    # Verifica se o status code da resposta é 200 (OK)
+    assert response.status_code == 200
+
+    # Verifica se a resposta segue o modelo ModeloItem
+    response_data = response.json()
+    assert response_data["titulo"] == produto_data["titulo"]
+    assert response_data["descricao"] == produto_data["descricao"]
+    assert response_data["preco"] == produto_data["preco"]

@@ -27,3 +27,9 @@ class Produtos:
 
     def listar(self):
         return self.produtos
+
+    def inserir(self, item: Dict[str, any]) -> Dict[str, any]:
+        self.id_atual += 1
+        item["id"] = self.id_atual
+        self.produtos = self.produtos.append(item)
+        return item
