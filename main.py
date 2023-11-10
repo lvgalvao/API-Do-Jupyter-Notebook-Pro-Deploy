@@ -23,7 +23,7 @@ def listar_produtos():
     return produtos.listar()
 
 
-@app.post("/produtos", response_model=ModeloItem)
+@app.post("/produtos", response_model=ModeloItem, status_code=201)
 def inserir_produto(item_a_inserir: ModeloItem):
     """
     View que adiciona um novo produto

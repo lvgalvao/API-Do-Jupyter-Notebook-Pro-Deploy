@@ -1,4 +1,5 @@
 from typing import List, Dict, Any, Optional
+from modelos import ModeloItem
 
 
 class Produtos:
@@ -28,8 +29,9 @@ class Produtos:
     def listar(self):
         return self.produtos
 
-    def inserir(self, item: Dict[str, any]) -> Dict[str, any]:
-        self.id_atual += 1
-        item["id"] = self.id_atual
-        self.produtos = self.produtos.append(item)
+    def inserir(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        if item.get("id") is None:
+            self.id_atual += 1
+            item["id"] = self.id_atual
+        self.produtos.append(item)
         return item
