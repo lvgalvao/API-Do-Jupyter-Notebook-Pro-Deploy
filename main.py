@@ -28,4 +28,6 @@ def inserir_produto(item_a_inserir: ModeloItem):
     """
     View que adiciona um novo produto
     """
+    # o item_a_inserir é do tipo ModeloItem, que é um Pydantic Model
+    # Precisamos passar ele para dict para que o método inserir
     return produtos.inserir(item_a_inserir.model_dump())
