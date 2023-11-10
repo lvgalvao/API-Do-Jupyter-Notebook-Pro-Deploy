@@ -390,6 +390,8 @@ Vamos aproveitar para refatorar nosso projeto criando as pastas de APP e a pasta
 - Pontos importantes: data.py , main.py e modelos.py vão para app
 - testes.py vai para testes e muda o nome para test_api.py
 - Alterar no CI o nome do arquivo de testes
+- Mover requirements.txt para a pasta APP
+- Modificar o site RENDER para apontar para a pasta APP
 
 ### Conectar ao Banco de Dados
 
