@@ -383,3 +383,22 @@ PR post to main
 
 Avaliar!
 
+### Pequena refatoração
+
+Vamos aproveitar para refatorar nosso projeto criando as pastas de APP e a pasta de testes
+
+- Pontos importantes: data.py , main.py e modelos.py vão para app
+- testes.py vai para testes e muda o nome para test_api.py
+- Alterar no CI o nome do arquivo de testes
+
+### Conectar ao Banco de Dados
+
+* Para se conectar a este banco de dados PostgreSQL, também vamos usar o SQL Alchemy
+    
+    ```bash
+    postgresql://meu_usuario:minha_senha@localhost:5432/meu_banco
+    ```
+    
+    Isso se estiver se conectando da sua máquina host. Se estiver se conectando de outro contêiner Docker na mesma rede, substitua `localhost` pelo nome do contêiner (`meu_postgres`).
+
+Com este comando, você criará um contêiner PostgreSQL com dados persistentes, que sobreviverão às reinicializações do contêiner e remoções do contêiner. 

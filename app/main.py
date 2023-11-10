@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from typing import List
-from data import Produtos
-from modelos import ModeloItem
+from app.data import Produtos
+from app.modelos import ModeloItem
 
 app = FastAPI()
 produtos = Produtos()

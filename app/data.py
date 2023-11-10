@@ -1,5 +1,5 @@
 from typing import List, Dict, Any, Optional
-from modelos import ModeloItem
+from app.modelos import ModeloItem
 
 
 class Produtos:

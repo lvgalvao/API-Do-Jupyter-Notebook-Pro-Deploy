@@ -2,9 +2,9 @@ from fastapi.testclient import TestClient
 import pytest
 from pydantic import ValidationError
 
-from modelos import ModeloItem
+from app.modelos import ModeloItem
 
-from main import app
+from app.main import app
 
 client = TestClient(app)
 
