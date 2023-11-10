@@ -328,6 +328,10 @@ uvicorn main:app --host 0.0.0.0 --port 10000
 
 # Vamos criar nossa rota post
 
+https://kinsta.com/pt/blog/lista-codigos-status-http/#:~:text=200%20C%C3%B3digos%20de%20status&text=200%3A%20%E2%80%9CEst%C3%A1%20tudo%20bem.,resultado%2C%20criou%20um%20novo%20recurso.
+
+Mudar o código para 201
+
 na main.py adicionar
 
 ```python
