@@ -63,8 +63,8 @@ def test_inserir_produto():
     # Simula uma requisição POST para a rota /produtos
     response = client.post("/produtos", json=produto_data)
 
-    # Verifica se o status code da resposta é 200 (OK)
-    assert response.status_code == 200
+    # Verifica se o status code da resposta é 201 (OK)
+    assert response.status_code == 201
 
     # Verifica se a resposta segue o modelo ModeloItem
     response_data = response.json()
