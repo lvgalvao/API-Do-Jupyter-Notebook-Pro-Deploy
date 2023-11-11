@@ -1,4 +1,5 @@
 fastapi
-prospector
+psycopg2-binary
 pydantic
+SQLAlchemy
 uvicorn
