@@ -2,7 +2,7 @@ from typing import Optional
 from pydantic import BaseModel, PositiveFloat
 
 
-class ModeloItem(BaseModel):
+class ProdutoSchema(BaseModel):
     """
     Modelo para um item de produto
     """
@@ -11,3 +11,6 @@ class ModeloItem(BaseModel):
     titulo: str
     descricao: Optional[str] = None
     preco: PositiveFloat
+
+    class ConfigDict:
+        from_attributes = True

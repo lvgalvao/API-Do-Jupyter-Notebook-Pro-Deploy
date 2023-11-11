@@ -395,6 +395,51 @@ Vamos aproveitar para refatorar nosso projeto criando as pastas de APP e a pasta
 
 ### Conectar ao Banco de Dados
 
+Adicionando as bibliotecas
+
+```bash
+poetry add sqlalchemy psycopg2-binary
+```
+
+Criando o arquivo config.py
+
+```
+from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy.orm import sessionmaker, declarative_base
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
+
+db_user = os.getenv("POSTGRES_USER")
+db_password = os.getenv("POSTGRES_PASSWORD")
+db_name = os.getenv("POSTGRES_DB")
+db_host = os.getenv("DB_HOST")
+db_port = os.getenv("DB_PORT")
+
+# Configurando a conexão com o banco de dados
+# DATABASE_URL = "postgresql://meu_usuario:minha_senha@localhost:5432/meu_banco"
+
+DATABASE_URL = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+
+# Criando a engine de conexão
+
+engine = create_engine(DATABASE_URL)
+
+# Criando a sessão
+
+Session = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+Base = declarative_base()
+
+```
+
+Criando o arquivo .env
+
+```
+``
+
 * Para se conectar a este banco de dados PostgreSQL, também vamos usar o SQL Alchemy
     
     ```bash
