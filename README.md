@@ -220,6 +220,16 @@ produtos: List[Dict[str, Any]] = [
     },
 ]
 
+id_atual = 3
+
+def lista(self):
+    return self.produtos
+
+def inserir(self, item: Dict[str, any]) -> Dict[str, any]:
+    self.id_atual += 1
+    item["id"] = self.id_atual
+    return self.produtos.append(item)
+
 @app.get("/produtos")
 def listar_produtos():
     """
@@ -243,7 +253,13 @@ class Produto(BaseModel):
     descricao: Optional[str]
     preco: float
 
-@app.get("/produtos", response_model=List[ModeloProduto])
+@app.get("/produtos", response_model=List[ModeloProduto], status_code=200)
+def listar_produtos(item_a_inserir: ModeloProduto):
+    """
+    View que que retorna o dicionário de produtos
+    """
+    return produtos.inserir(item_a_inserir).dict()
+```
 
 ```
 
