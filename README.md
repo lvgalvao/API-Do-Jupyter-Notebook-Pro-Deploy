@@ -75,14 +75,19 @@ Vamos usar o VScode e o terminal para criar nossa primeira API.
 Ambientes virtuais são uma ferramenta para manter as dependências necessárias para diferentes projetos em locais separados, evitando problemas de compatibilidade.
 
 ```bash
-python -m venv .venv
+poetry init
 ```
 
 # Ativando nosso ambiente virtual
 
 ```bash
-source .venv/bin/activate
+portey shell
 ```
+
+```bash
+poetry add taskipy
+```
+
 
 # Instalando o FastAPI
 O FastAPI é um framework para criação de APIs RESTful com Python.
@@ -266,16 +271,19 @@ Refatorando, criar uma branch chamada modelos.py
 
 from typing import Optional
 from pydantic import BaseModel, PositiveFloat
+from enum import Enum
 
 
-class ModeloItem(BaseModel):
+class ProdutoSchema(BaseModel):
     """
     Modelo para um item de produto
     """
 
+    id: Optional[int] = None
     titulo: str
     descricao: Optional[str] = None
     preco: PositiveFloat
+    categoria: Categoria
 
 ```
 
@@ -835,6 +843,4 @@ docker run -d \
   --name nome_do_container \
   nome_da_imagem
 ```
-
-### Subindo o FastAPI no Render
 
