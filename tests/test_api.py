@@ -7,6 +7,27 @@ from pydantic import ValidationError
 
 @pytest.fixture(scope="module")
 def test_client():
+    """
+    Cria uma instância de TestClient que pode ser usada em testes.
+    """
+    with TestClient(app) as client:
+        yield client
+
+
+@pytest.fixture(scope="module")
+def produto_id(test_client):
+    produto_data = {
+        "titulo": "Produto Teste",
+        "descricao": "Descrição Teste",
+        "preco": 19.99,
+    }
+    response = test_client.post("/produtos", json=produto_data)
+    assert response.status_code == 201
+    return response.json()["id"]
+
+
+@pytest.fixture(scope="module")
+def test_client():
     with TestClient(app) as client:
         yield client
 
