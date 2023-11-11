@@ -225,7 +225,7 @@ def listar_produtos():
 
 # Adicionando o tipo de retorno Pydantic
 
-```
+```bash
 pip install pydantic
 ```
 
@@ -353,7 +353,7 @@ no data.py adicionar
 ```
 
 no tests.py adicionar
-```
+```python
 def test_inserir_produto():
     # Dados do produto que vamos inserir
     produto_data = {
@@ -437,8 +437,6 @@ Base = declarative_base()
 
 Criando o arquivo .env
 
-```
-``
 
 * Para se conectar a este banco de dados PostgreSQL, também vamos usar o SQL Alchemy
     
@@ -449,3 +447,258 @@ Criando o arquivo .env
     Isso se estiver se conectando da sua máquina host. Se estiver se conectando de outro contêiner Docker na mesma rede, substitua `localhost` pelo nome do contêiner (`meu_postgres`).
 
 Com este comando, você criará um contêiner PostgreSQL com dados persistentes, que sobreviverão às reinicializações do contêiner e remoções do contêiner. 
+
+### Arquivo config.py
+
+
+
+Esse código configura a conexão com um banco de dados PostgreSQL usando SQLAlchemy e python-dotenv, e fornece uma forma de gerenciar sessões de banco de dados em um aplicativo FastAPI. As sessões são essenciais para executar consultas e operações no banco de dados.
+
+```python
+from sqlalchemy import create_engine, Column, Integer, String, Float
+# Importa funcionalidades do SQLAlchemy: 
+# create_engine (para conectar ao banco de dados), 
+# Column, Integer, String, Float (para definir colunas e tipos de dados nas tabelas).
+
+from sqlalchemy.orm import sessionmaker, declarative_base
+# Importa sessionmaker (para criar sessões de banco de dados) e 
+# declarative_base (para criar uma classe base para modelos declarativos).
+
+import os
+from dotenv import load_dotenv
+# Importa o módulo os para interagir com o sistema operacional e 
+# load_dotenv do pacote python-dotenv para carregar variáveis de ambiente de um arquivo .env.
+
+load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env.
+
+# Acessa e armazena variáveis de ambiente específicas (credenciais do banco de dados).
+db_user = os.getenv("POSTGRES_USER")
+db_password = os.getenv("POSTGRES_PASSWORD")
+db_name = os.getenv("POSTGRES_DB")
+db_host = os.getenv("DB_HOST")
+db_port = os.getenv("DB_PORT")
+
+# Constrói a URL de conexão do banco de dados usando as variáveis de ambiente.
+DATABASE_URL = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+
+# Cria um motor de banco de dados SQLAlchemy que gerencia as conexões à base de dados.
+engine = create_engine(DATABASE_URL)
+
+# Cria uma fábrica de sessões do SQLAlchemy que será usada para criar sessões.
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+# Cria uma classe base declarativa para os modelos do SQLAlchemy.
+Base = declarative_base()
+
+# Define uma função geradora que fornece uma sessão de banco de dados e garante o fechamento da sessão.
+def get_db():
+    db = SessionLocal()  # Cria uma instância da sessão de banco de dados.
+    try:
+        yield db  # Fornece a sessão para a operação (utilizado em dependências do FastAPI).
+    finally:
+        db.close()  # Garante que a sessão seja fechada após o uso.
+```
+
+### Arquivo models.py
+
+O arquivo model.py é utilizado em projetos que utilizam o SQLAlchemy, um ORM (Object-Relational Mapping) para Python. Este arquivo define as classes que representam as tabelas do banco de dados em um estilo declarativo. Cada classe mapeia para uma tabela, e cada atributo da classe mapeia para uma coluna na tabela correspondente. Vamos detalhar o código:
+
+```python
+from sqlalchemy import Column, Integer, String, Float
+# Importa as classes Column, Integer, String e Float do SQLAlchemy.
+# Essas classes são usadas para definir as colunas nas tabelas do banco de dados.
+
+from sqlalchemy.orm import declarative_base
+# Importa a função declarative_base do SQLAlchemy ORM.
+# declarative_base é usado para criar uma classe base para modelos declarativos.
+
+Base = declarative_base()
+# Cria uma classe base para modelos declarativos.
+# Classes que herdam de Base são automaticamente mapeadas para tabelas.
+
+class Produto(Base):
+    # Define uma nova classe Produto, herdando de Base.
+    # Esta classe representa uma tabela no banco de dados.
+
+    __tablename__ = "produtos"
+    # Define o nome da tabela no banco de dados.
+    # Quando uma instância de Produto for salva, ela será armazenada na tabela 'produtos'.
+
+    id = Column(Integer, primary_key=True, index=True)
+    # Define uma coluna 'id' como um inteiro, chave primária e indexada.
+    # Isso significa que cada produto terá um ID único, que também será usado para indexação.
+
+    titulo = Column(String, nullable=False)
+    # Define uma coluna 'titulo' que armazena strings (textos).
+    # 'nullable=False' significa que esta coluna não pode ser nula (ou seja, o título é obrigatório).
+
+    descricao = Column(String)
+    # Define uma coluna 'descricao' que também armazena strings.
+    # Não tem 'nullable=False', portanto, esta coluna pode ser nula (opcional).
+
+    preco = Column(Float, nullable=False)
+    # Define uma coluna 'preco' que armazena números de ponto flutuante (decimais).
+    # Assim como 'titulo', esta coluna é obrigatória (não pode ser nula).
+```
+
+Arquivo schemas.py
+
+O arquivo schemas.py, contendo a definição de ProdutoSchema, é utilizado para definir esquemas de dados usando a biblioteca Pydantic no contexto de uma aplicação FastAPI. Este arquivo é essencial para a validação e documentação de dados de entrada e saída na sua API. Vamos explorar o que cada parte do código faz:
+
+```python
+from sqlalchemy import Column, Integer, String, Float
+# Importa as classes Column, Integer, String e Float do SQLAlchemy.
+# Essas classes são usadas para definir as colunas nas tabelas do banco de dados.
+
+from sqlalchemy.orm import declarative_base
+# Importa a função declarative_base do SQLAlchemy ORM.
+# declarative_base é usado para criar uma classe base para modelos declarativos.
+
+Base = declarative_base()
+# Cria uma classe base para modelos declarativos.
+# Classes que herdam de Base são automaticamente mapeadas para tabelas.
+
+class Produto(Base):
+    # Define uma nova classe Produto, herdando de Base.
+    # Esta classe representa uma tabela no banco de dados.
+
+    __tablename__ = "produtos"
+    # Define o nome da tabela no banco de dados.
+    # Quando uma instância de Produto for salva, ela será armazenada na tabela 'produtos'.
+
+    id = Column(Integer, primary_key=True, index=True)
+    # Define uma coluna 'id' como um inteiro, chave primária e indexada.
+    # Isso significa que cada produto terá um ID único, que também será usado para indexação.
+
+    titulo = Column(String, nullable=False)
+    # Define uma coluna 'titulo' que armazena strings (textos).
+    # 'nullable=False' significa que esta coluna não pode ser nula (ou seja, o título é obrigatório).
+
+    descricao = Column(String)
+    # Define uma coluna 'descricao' que também armazena strings.
+    # Não tem 'nullable=False', portanto, esta coluna pode ser nula (opcional).
+
+    preco = Column(Float, nullable=False)
+    # Define uma coluna 'preco' que armazena números de ponto flutuante (decimais).
+    # Assim como 'titulo', esta coluna é obrigatória (não pode ser nula).
+```
+
+### Arquivo schemas.py
+
+O arquivo schemas.py, contendo a definição de ProdutoSchema, é utilizado para definir esquemas de dados usando a biblioteca Pydantic no contexto de uma aplicação FastAPI. Este arquivo é essencial para a validação e documentação de dados de entrada e saída na sua API. Vamos explorar o que cada parte do código faz:
+
+```python
+from typing import Optional
+# Importa o tipo 'Optional' do módulo 'typing'. 
+# 'Optional' é usado para indicar campos que podem ser nulos (None).
+
+from pydantic import BaseModel, PositiveFloat
+# Importa 'BaseModel' e 'PositiveFloat' do módulo 'pydantic'.
+# 'BaseModel' é a classe base para criar esquemas de dados com Pydantic.
+# 'PositiveFloat' é um tipo específico do Pydantic para representar números flutuantes positivos.
+
+class ProdutoSchema(BaseModel):
+    # Define uma classe 'ProdutoSchema' que herda de 'BaseModel'.
+    # Esta classe será usada para criar instâncias de esquemas de dados para produtos,
+    # validando e serializando dados de acordo com os tipos definidos.
+
+    """
+    Modelo para um item de produto
+    """
+    # Documentação da classe.
+
+    id: Optional[int] = None
+    # Define um campo 'id' como um inteiro opcional (pode ser nulo).
+    # O valor padrão é 'None', indicando que o campo pode ser omitido.
+
+    titulo: str
+    # Define um campo 'titulo' que deve ser uma string.
+    # Este campo é obrigatório (não tem 'Optional').
+
+    descricao: Optional[str] = None
+    # Define um campo 'descricao' como uma string opcional.
+    # Também pode ser omitido na criação de uma instância da classe.
+
+    preco: PositiveFloat
+    # Define um campo 'preco' que deve ser um número de ponto flutuante positivo.
+    # É um campo obrigatório.
+
+    class ConfigDict:
+        from_attributes = True
+    # Isso permitiria que o modelo Pydantic leia dados mesmo se eles forem ORMs do SQLAlchemy ou outros dicionários.
+```
+
+Agora o arquivo Router.py
+
+```python
+from fastapi import APIRouter, Depends, HTTPException
+# Importa classes necessárias do FastAPI: 
+# APIRouter (para definir rotas), 
+# Depends (para injeção de dependências), 
+# HTTPException (para lançar exceções HTTP).
+
+from sqlalchemy.orm import Session
+# Importa a classe Session do SQLAlchemy ORM para gerenciar as sessões do banco de dados.
+
+from typing import List
+# Importa List do módulo typing para uso em anotações de tipo.
+
+from .schemas import ProdutoSchema
+# Importa o esquema ProdutoSchema definido em schemas.py para validação de dados.
+
+from .config import SessionLocal, get_db
+# Importa a função get_db e a fábrica de sessão SessionLocal de config.py.
+
+from .model import Produto
+# Importa a classe do modelo Produto definida em model.py que mapeia para a tabela de produtos no banco de dados.
+
+router = APIRouter()
+# Cria uma instância de APIRouter, que é usada para definir as rotas/endpoints da API.
+
+@router.get("/produtos", response_model=List[ProdutoSchema])
+# Define uma rota GET para '/produtos'.
+# response_model especifica que a resposta deve ser uma lista de instâncias de ProdutoSchema.
+async def listar_produtos(db: Session = Depends(get_db)):
+    # Função assíncrona que lista produtos.
+    # A sessão do banco de dados é injetada via Depends.
+    return db.query(Produto).all()
+    # Retorna todas as instâncias de Produto na tabela produtos.
+
+@router.get("/produtos/{produto_id}", response_model=ProdutoSchema)
+# Define uma rota GET para '/produtos/{produto_id}'.
+# Espera um ID de produto na URL e usa ProdutoSchema para a resposta.
+async def obter_produto(produto_id: int, db: Session = Depends(get_db)):
+    # Função assíncrona para obter um produto específico pelo ID.
+    produto = db.query(Produto).filter(Produto.id == produto_id).first()
+    # Consulta o produto pelo ID fornecido.
+    if produto:
+        return produto
+    else:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    # Se o produto existe, retorna-o; senão, lança uma exceção HTTP 404.
+
+# As próximas rotas seguem um padrão similar:
+# - A rota POST '/produtos' para inserir um novo produto.
+# - A rota DELETE '/produtos/{produto_id}' para remover um produto pelo ID.
+# - A rota PUT '/produtos/{produto_id}' para atualizar um produto pelo ID.
+```
+
+### Arquivo main.py
+
+```python
+from fastapi import FastAPI  # Importa a classe FastAPI do framework FastAPI.
+from .router import router  # Importa o objeto 'router' do módulo 'router' local.
+
+app = FastAPI()  # Cria uma instância do aplicativo FastAPI.
+# 'app' é a instância central do seu aplicativo web.
+
+app.include_router(router)  # Anexa o roteador 'router' ao aplicativo FastAPI.
+# Isso registra todas as rotas e operações definidas em 'router' no aplicativo.
+```
+
+### Refatorar os testes
+
+arquivo test_api.py
+
+```python
+
