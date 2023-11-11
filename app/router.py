@@ -9,16 +9,6 @@ from .model import Produto
 router = APIRouter()
 
 
-# Rotas da API com lógica CRUD integrada
-@router.post("/produtos", response_model=ProdutoSchema, status_code=201)
-async def inserir_produto(produto: ProdutoSchema, db: Session = Depends(get_db)):
-    db_produto = Produto(**produto.model_dump())
-    db.add(db_produto)
-    db.commit()
-    db.refresh(db_produto)
-    return db_produto
-
-
 @router.get("/produtos", response_model=List[ProdutoSchema])
 async def listar_produtos(db: Session = Depends(get_db)):
     return db.query(Produto).all()
@@ -31,6 +21,16 @@ async def obter_produto(produto_id: int, db: Session = Depends(get_db)):
         return produto
     else:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+
+# Rotas da API com lógica CRUD integrada
+@router.post("/produtos", response_model=ProdutoSchema, status_code=201)
+async def inserir_produto(produto: ProdutoSchema, db: Session = Depends(get_db)):
+    db_produto = Produto(**produto.model_dump())
+    db.add(db_produto)
+    db.commit()
+    db.refresh(db_produto)
+    return db_produto
 
 
 @router.delete("/produtos/{produto_id}", response_model=ProdutoSchema)
