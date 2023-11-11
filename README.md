@@ -835,3 +835,6 @@ docker run -d \
   --name nome_do_container \
   nome_da_imagem
 ```
+
+### Subindo o FastAPI no Render
+

@@ -24,6 +24,7 @@ db_name = os.getenv("POSTGRES_DB")
 db_host = os.getenv("DB_HOST")
 db_port = os.getenv("DB_PORT")
 
+
 # Constrói a URL de conexão do banco de dados usando as variáveis de ambiente.
 DATABASE_URL = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 
