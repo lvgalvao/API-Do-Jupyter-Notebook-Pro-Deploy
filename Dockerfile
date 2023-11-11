@@ -4,11 +4,25 @@
 # If you need more help, visit the Dockerfile reference guide at
 # https://docs.docker.com/engine/reference/builder/
 
+
 ARG PYTHON_VERSION=3.11.5
 FROM python:${PYTHON_VERSION}-slim as base
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
+
+ARG POSTGRES_PASSWORD
+ARG POSTGRES_USER
+ARG POSTGRES_DB
+ARG DB_HOST
+ARG DB_PORT
+
+# Aqui, você pode usar as variáveis ARG como variáveis de ambiente ou em outras instruções
+ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+ENV POSTGRES_USER=${POSTGRES_USER}
+ENV POSTGRES_DB=${POSTGRES_DB}
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
 
 # Keeps Python from buffering stdout and stderr to avoid situations where
 # the application crashes without emitting any logs due to buffering.
@@ -46,4 +60,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD uvicorn '.venv.lib.python3.11.site-packages.httpx._transports.asgi:application' --host=0.0.0.0 --port=8000
+CMD uvicorn app.main:app --reload --host=0.0.0.0 --port=8000
